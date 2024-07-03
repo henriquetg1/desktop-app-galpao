@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import CriacaoGalpao from './pages/CriacaoGalpao';
+import EdicaoGalpao from './pages/EdicaoGalpao';
 import './App.css';
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/galpoes" element={<Home />} />
       <Route path="/galpoes/criar" element={<CriacaoGalpao />} />
+      <Route path="/galpoes/editar/:id" element={<EdicaoGalpao />} />
 
     </Routes>
   );

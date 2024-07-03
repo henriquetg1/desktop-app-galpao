@@ -2,7 +2,28 @@ import React, { useEffect, useState } from 'react';
 import { Autocomplete, Box, Button, List, TextField, ListItem, ListItemText, Typography, Divider, IconButton, ListItemAvatar, Avatar, Container, createTheme, ThemeProvider, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import EditIcon from '@mui/icons-material/Edit';
 
+// Tema personalizado
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Arial, sans-serif'
+  },
+  palette: {
+    primary: {
+      main: '#006437', // Verde do Palmeiras
+    },
+    secondary: {
+      main: '#1D78AC', // Azul mais claro
+    },
+    text: {
+      primary: '#000000', // Preto
+    },
+    background: {
+      default: '#ffffff',
+    },
+  },
+});
 
 // Variantes de animação para o container
 const containerVariants = {
@@ -46,77 +67,98 @@ export default function Home() {
     navigate(`/galpoes/${id}`);
   };
 
-  return (
-    <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
-      <Typography
-        sx={{ display: 'inline', fontWeight: 'bold', fontSize: 30, lineHeight: 3 }}
-        color="black"
-        variant="h2"
-        gutterBottom
-      >
-        Bem-vindo ao Sistema de Gerenciamento de Galpões
-      </Typography>
-      <br />
-      <Typography
-        sx={{ display: 'inline', fontWeight: 'bold', fontSize: 30, lineHeight: 3 }}
-        color="black"
-        variant="h6"
-        gutterBottom
-      >
-        Galpões
-      </Typography>
-      <br />
-      {loading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-          <CircularProgress />
-        </Box>
-        // Verifica se existem galpoes criados:
-      ) : data.length > 0 ? (
-        <List sx={{ width: '100%', maxWidth: 360, margin: 'auto' }}>
-          {data.map((galpao) => (
-            <ListItem key={galpao.id} onClick={() => handleGalpaoClick(galpao.id)} button>
-              <ListItemText primary={
-                <Typography
-                  sx={{ display: 'inline', fontWeight: 'bold', fontSize: 20, lineHeight: 3 }}
-                  color="black"
-                  variant="h6"
-                  gutterBottom
-                >
-                  {galpao.nome}
-                </Typography>
+  // Manipulador para clicar no ícone de edição e navegar para a página de edição
+  const handleEditClick = (id) => {
+    navigate(`/galpoes/editar/${id}`);
+  };
 
-              } secondary={
-                <Typography
-                  sx={{ display: 'inline', fontWeight: 'bold', fontSize: 15, lineHeight: 3 }}
-                  color="black"
-                  variant="h6"
-                  gutterBottom
-                >
-                  {galpao.endereco}
-                </Typography>
-              } />
-            </ListItem>
-          ))}
-        </List>
-      ) : (
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
         <Typography
-          sx={{ display: 'inline', fontWeight: 'bold', fontSize: 20, lineHeight: 3 }}
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
           color="black"
-          variant="h6"
+          variant="h2"
           gutterBottom
         >
-          Nenhum galpão encontrado
+          Bem-vindo Sr. Waldir José Turco!
         </Typography>
-      )}
-      <br />
-      {/* Botão criar galpão */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => navigate('/galpoes/criar')}
-      >
-        Criar Galpão
-      </Button>
-    </Container>
+        <Typography
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 22, lineHeight: 1, marginTop: 5}}
+          color="black"
+          variant="h4"
+          gutterBottom
+        >
+          Acesse os galpões disponíveis:
+        </Typography>
+        <br />
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <CircularProgress />
+          </Box>
+        ) : data.length > 0 ? (
+          <List sx={{ width: '100%', maxWidth: 360, margin: 'auto' }}>
+            {data.map((galpao) => (
+              <Box key={galpao.id} sx={{ marginBottom: 2, display: 'flex', alignItems: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  fullWidth
+                  onClick={() => handleGalpaoClick(galpao.id)}
+                  sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}
+                >
+                  <Box sx={{ textAlign: 'left' }}>
+                    <Typography
+                      sx={{ display: 'block', fontWeight: 'bold', fontSize: 16, lineHeight: 1, marginBottom: 2, marginTop: 1.5}}
+                      color="inherit"
+                      variant="h6"
+                      gutterBottom
+                    >
+                      {galpao.nome}
+                    </Typography>
+                    <Typography
+                      sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5}}
+                      color="inherit"
+                      variant="h6"
+                      gutterBottom
+                    >
+                      {galpao.endereco}
+                    </Typography>
+                  </Box>
+                  <IconButton
+                    aria-label="edit"
+                    color='inherit'
+                    onClick={(e) => {
+                      e.stopPropagation(); // Impede o clique no ícone de navegar para a página de detalhes
+                      handleEditClick(galpao.id);
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Button>
+              </Box>
+            ))}
+          </List>
+        ) : (
+          <Typography
+            sx={{ display: 'inline', fontWeight: 'bold', fontSize: 20, lineHeight: 3 }}
+            color="black"
+            variant="h6"
+            gutterBottom
+          >
+            Não há galpões cadastrados
+          </Typography>
+        )}
+        <br />
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => navigate('/galpoes/criar')}
+          sx={{ display: 'block', margin: 'auto', width: '40%', padding: '10px', fontSize: '14px'}}
+        >
+          Criar Galpão
+        </Button>
+      </Container>
+    </ThemeProvider>
   );
 }

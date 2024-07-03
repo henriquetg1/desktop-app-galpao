@@ -28,7 +28,7 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(__dirname, '..', 'public', 'logo-w-j-t-branco.png'), 
+    icon: path.join(__dirname, '..', 'public', 'logo-w-j-t-preto.png'), 
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
