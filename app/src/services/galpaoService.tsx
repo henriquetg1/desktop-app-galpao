@@ -30,4 +30,14 @@ export interface Galpao {
       throw new Error('Erro ao atualizar galpão');
     }
   };
+
+  export const deleteGalpao = async (id: string): Promise<void> => {
+    const response = await fetch(`http://localhost:8080/galpoes/${id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao excluir galpão');
+    }
+  };
   

@@ -84,7 +84,7 @@ export default function Home() {
           Bem-vindo Sr. Waldir José Turco!
         </Typography>
         <Typography
-          sx={{ display: 'block', fontWeight: 'bold', fontSize: 22, lineHeight: 1, marginTop: 5}}
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5}}
           color="black"
           variant="h4"
           gutterBottom
@@ -154,7 +154,7 @@ export default function Home() {
           variant="contained"
           color="primary"
           onClick={() => navigate('/galpoes/criar')}
-          sx={{ display: 'block', margin: 'auto', width: '40%', padding: '10px', fontSize: '14px'}}
+          sx={{ display: 'block', margin: 'auto', width: '150px', padding: '10px', fontSize: '14px'}}
         >
           Criar Galpão
         </Button>
