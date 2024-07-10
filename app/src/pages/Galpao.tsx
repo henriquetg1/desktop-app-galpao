@@ -43,7 +43,7 @@ const GalpaoPage = () => {
     }, [id, navigate]);
 
     const handleSetorClick = (setorId) => {
-        navigate(`/galpoes/${id}/setores/${setorId}`);
+        navigate(`/setores/${setorId}`);
     };
 
     const handleEditSetorClick = (setorId, e) => {
