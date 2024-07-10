@@ -60,7 +60,7 @@ export interface Item {
     return response.json();
   };
   
-export const getItensPorSetor = async (setorId: string): Promise<Item[]> => {
+  export const getItensPorSetor = async (setorId: string): Promise<Item[]> => {
     const response = await fetch(`http://localhost:8080/itens/setor/${setorId}`, {
         method: 'GET',
     });
@@ -69,6 +69,8 @@ export const getItensPorSetor = async (setorId: string): Promise<Item[]> => {
         throw new Error('Erro ao buscar itens');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('getItensPorSetor data:', data); // Log dos dados recebidos
+    return data;
 };
 

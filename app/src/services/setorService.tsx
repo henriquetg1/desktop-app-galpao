@@ -55,8 +55,11 @@ export const getSetor = async (id: string): Promise<Setor> => {
         throw new Error('Erro ao buscar setor');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('getSetor data:', data); // Log dos dados recebidos
+    return data;
 };
+
 
 export const buscarSetores = async (): Promise<Setor[]> => {
     const response = await fetch('http://localhost:8080/setores', {

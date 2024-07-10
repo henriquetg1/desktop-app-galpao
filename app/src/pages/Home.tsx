@@ -156,7 +156,7 @@ export default function Home() {
           onClick={() => navigate('/galpoes/criar')}
           sx={{ display: 'block', margin: 'auto', width: '150px', padding: '10px', fontSize: '14px'}}
         >
-          Criar Galpão
+          Novo Galpão
         </Button>
       </Container>
     </ThemeProvider>

@@ -4,7 +4,7 @@ import { Box, Button, Container, Typography, createTheme, IconButton } from '@mu
 import { ThemeProvider } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import { getSetor, Setor } from '../services/setorService';
-import { Item } from '../services/itemService';
+import { getItensPorSetor, Item } from '../services/itemService';
 
 // Tema personalizado
 const theme = createTheme({
@@ -36,8 +36,13 @@ const ItemPage = () => {
   useEffect(() => {
     getSetor(setorId!)
       .then((data) => {
+        console.log('Setor data:', data); // Log dos dados recebidos
         setSetor(data);
-        setItens(data.itens || []);
+        return getItensPorSetor(setorId!); // Buscar itens do setor separadamente
+      })
+      .then((itensData) => {
+        console.log('Itens data:', itensData); // Log dos itens recebidos
+        setItens(itensData);
       })
       .catch(() => navigate('/404'));
   }, [setorId, navigate]);
@@ -74,39 +79,53 @@ const ItemPage = () => {
         >
           Itens
         </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {itens.length > 0 ? (
-            itens.map((item) => (
-              <Box key={item.id} sx={{ marginBottom: 2, display: 'flex', alignItems: 'center' }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  fullWidth
-                  onClick={() => handleItemClick(item.id)}
-                  sx={{ display: 'flex', justifyContent: 'space-between', padding: 2 }}
-                >
-                  <Box sx={{ textAlign: 'left' }}>
-                    <Typography
-                      sx={{ display: 'block', fontWeight: 'bold', fontSize: 16, lineHeight: 1, marginBottom: 2, marginTop: 1.5 }}
-                      color="inherit"
-                      variant="h6"
-                      gutterBottom
-                    >
-                      {item.nome || 'Nome do item não disponível'}
-                    </Typography>
-                  </Box>
-                  <IconButton
-                    aria-label="edit"
-                    color='inherit'
-                    onClick={(e) => handleEditItemClick(item.id, e)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Button>
-              </Box>
-            ))
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {itens.length === 0 ? (
+            <Typography variant="body1">Nenhum item encontrado.</Typography>
           ) : (
-            <Typography>Nenhum item disponível</Typography>
+            itens.map((item) => (
+              <Button
+                key={item.id}
+                variant="contained"
+                color="secondary"
+                onClick={() => handleItemClick(item.id)}
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, width: '50%', marginBottom: 2 }}
+              >
+                <Box sx={{ textAlign: 'left' }}>
+                  <Typography
+                    sx={{ display: 'block', fontWeight: 'bold', fontSize: 16, lineHeight: 1, marginBottom: 2, marginTop: 1.5 }}
+                    color="inherit"
+                    variant="h6"
+                    gutterBottom
+                  >
+                    {item.nome}
+                  </Typography>
+                  <Typography
+                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5 }}
+                    color="inherit"
+                    variant="h6"
+                    gutterBottom
+                  >
+                    {item.posicao}
+                  </Typography>
+                  <Typography
+                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5 }}
+                    color="inherit"
+                    variant="h6"
+                    gutterBottom
+                  >
+                    {item.quantidade}
+                  </Typography>
+                </Box>
+                <IconButton
+                  aria-label="edit"
+                  color='inherit'
+                  onClick={(e) => handleEditItemClick(item.id, e)}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Button>
+            ))
           )}
         </Box>
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
