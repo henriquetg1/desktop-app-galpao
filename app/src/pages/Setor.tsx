@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, Typography, createTheme, IconButton } from '@mui/material';
+import { Box, Button, Container, Typography, createTheme, IconButton, CircularProgress } from '@mui/material';
+import { motion } from 'framer-motion';
 import { ThemeProvider } from '@mui/system';
 import EditIcon from '@mui/icons-material/Edit';
 import { getSetor, Setor } from '../services/setorService';
@@ -27,24 +28,36 @@ const theme = createTheme({
   }
 });
 
+// Variantes de animação para o container
+const containerVariants = {
+  hidden: { opacity: 0, y: -50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, type: 'spring' },
+  },
+};
+
 const ItemPage = () => {
   const [setor, setSetor] = useState<Setor | null>(null);
   const [itens, setItens] = useState<Item[]>([]);
+  const [loading, setLoading] = useState(true); // Estado para gerenciar o carregamento
   const navigate = useNavigate();
   const { setorId } = useParams();
 
   useEffect(() => {
+    setLoading(true);
     getSetor(setorId!)
       .then((data) => {
-        console.log('Setor data:', data); // Log dos dados recebidos
         setSetor(data);
         return getItensPorSetor(setorId!); // Buscar itens do setor separadamente
       })
       .then((itensData) => {
-        console.log('Itens data:', itensData); // Log dos itens recebidos
         setItens(itensData);
+        setLoading(false);
       })
       .catch(() => navigate('/404'));
+      setLoading(false);
   }, [setorId, navigate]);
 
   const handleItemClick = (itemId: string) => {
@@ -62,7 +75,7 @@ const ItemPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container>
+      <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
         <Typography
           sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
           color="black"
@@ -72,15 +85,19 @@ const ItemPage = () => {
           Setor: {setor?.nome}
         </Typography>
         <Typography
-          sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5 }}
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5, marginBottom: 2}}
           color="black"
           variant="h4"
           gutterBottom
         >
-          Itens
+          Itens:
         </Typography>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {itens.length === 0 ? (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+              <CircularProgress />
+            </Box>
+          ) : itens.length === 0 ? (
             <Typography variant="body1">Nenhum item encontrado.</Typography>
           ) : (
             itens.map((item) => (
@@ -88,8 +105,9 @@ const ItemPage = () => {
                 key={item.id}
                 variant="contained"
                 color="secondary"
+                fullWidth
                 onClick={() => handleItemClick(item.id)}
-                sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, width: '50%', marginBottom: 2 }}
+                sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, width: '120%', marginBottom: 2}}
               >
                 <Box sx={{ textAlign: 'left' }}>
                   <Typography
@@ -106,15 +124,15 @@ const ItemPage = () => {
                     variant="h6"
                     gutterBottom
                   >
-                    {item.posicao}
+                    POS: {item.posicao}
                   </Typography>
                   <Typography
-                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5 }}
+                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5, textTransform: 'none' }}
                     color="inherit"
                     variant="h6"
                     gutterBottom
                   >
-                    {item.quantidade}
+                    Quantidade: {item.quantidade}
                   </Typography>
                 </Box>
                 <IconButton
@@ -128,6 +146,7 @@ const ItemPage = () => {
             ))
           )}
         </Box>
+        <br />
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Button
             variant="contained"
@@ -143,7 +162,7 @@ const ItemPage = () => {
             onClick={() => navigate(`/galpoes`)}
             style={{ margin: 'auto', marginLeft: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
           >
-            Voltar
+            Cancelar
           </Button>
         </Box>
       </Container>

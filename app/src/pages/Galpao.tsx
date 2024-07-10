@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, Typography, createTheme, IconButton } from '@mui/material';
+import { Box, Button, Container, Typography, createTheme, IconButton, CircularProgress } from '@mui/material';
+import { motion } from 'framer-motion';
 import { ThemeProvider } from '@mui/system';
 import { Galpao, getGalpao } from '../services/galpaoService';
 import { Setor } from '../services/setorService';
@@ -27,19 +28,33 @@ const theme = createTheme({
   }
 });
 
+// Variantes de animação para o container
+const containerVariants = {
+  hidden: { opacity: 0, y: -50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1, type: 'spring' },
+  },
+};
+
 const GalpaoPage = () => {
     const [galpao, setGalpao] = useState<Galpao | null>(null);
     const [setores, setSetores] = useState<Setor[]>([]);
+    const [loading, setLoading] = useState(true); // Estado para gerenciar o carregamento
     const navigate = useNavigate();
     const { id } = useParams();
 
     useEffect(() => {
+        setLoading(true);
         getGalpao(id!)
             .then((data) => {
                 setGalpao(data);
                 setSetores(data.setores || []);
+                setLoading(false);
             })
             .catch(() => navigate('/404'));
+            setLoading(false);
     }, [id, navigate]);
 
     const handleSetorClick = (setorId) => {
@@ -57,7 +72,7 @@ const GalpaoPage = () => {
 
     return (
         <ThemeProvider theme={theme}>
-          <Container>
+          <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
             <Typography
               sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
               color="black"
@@ -68,14 +83,18 @@ const GalpaoPage = () => {
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Typography
-                sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5}}
+                sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5, marginBottom: 2}}
                 color="black"
                 variant="h4"
                 gutterBottom
               >
-                Setores
+                Acesse os setores cadastrados abaixo:
               </Typography>
-              {setores.length > 0 ? (
+              {loading ? (
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                  <CircularProgress />
+                </Box>
+              ) : setores.length > 0 ? (
                 setores.map((setor) => (
                   <Box key={setor.id} sx={{ marginBottom: 2, display: 'flex', alignItems: 'center' }}>
                     <Button
@@ -112,6 +131,7 @@ const GalpaoPage = () => {
                 <Typography>Nenhum setor disponível</Typography>
               )}
             </Box>
+            <br />
             <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               <Button
                 variant="contained"

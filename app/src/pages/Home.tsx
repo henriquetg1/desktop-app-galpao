@@ -84,14 +84,13 @@ export default function Home() {
           Bem-vindo Sr. Waldir José Turco!
         </Typography>
         <Typography
-          sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5}}
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5, marginBottom: 2.5}}
           color="black"
           variant="h4"
           gutterBottom
         >
           Acesse os galpões disponíveis:
         </Typography>
-        <br />
         {loading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <CircularProgress />
