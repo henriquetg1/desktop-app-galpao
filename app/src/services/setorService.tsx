@@ -1,9 +1,11 @@
 import { Galpao } from './galpaoService';
+import { Item } from './itemService';
 
 export interface Setor {
     id: string;
     nome: string;
     galpao: Galpao;
+    itens: Item[]; // Adiciona a propriedade itens
 }
 
 export const createSetor = async (galpaoId: string, setor: Setor): Promise<void> => {
@@ -44,7 +46,7 @@ export const deleteSetor = async (id: string): Promise<void> => {
     }
 };
 
-export const buscarSetor = async (id: string): Promise<Setor> => {
+export const getSetor = async (id: string): Promise<Setor> => {
     const response = await fetch(`http://localhost:8080/setores/${id}`, {
         method: 'GET',
     });

@@ -2,15 +2,16 @@ import { Setor } from './setorService';
 import { Galpao } from './galpaoService';
 
 export interface Item {
-    nome: string;
-    setor: Setor[];
-    posicao: string;
-    quantidade: number;
-    galpao: Galpao[];
-  }
+  id: string;
+  nome: string;
+  posicao: string;
+  quantidade: number;
+  setor: Setor;
+  galpao: Galpao;
+}
   
-  export const createItem = async (item: Item): Promise<void> => {
-    const response = await fetch('http://localhost:8080/itens', {
+  export const createItem = async (setorId: string, item: Item): Promise<void> => {
+    const response = await fetch(`http://localhost:8080/itens/setor/${setorId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -19,9 +20,9 @@ export interface Item {
     });
   
     if (!response.ok) {
-      throw new Error('Erro ao criar item');
+      throw new Error('Erro ao cadastrar item');
     }
-  };
+  }
   
   export const updateItem = async (id: string, item: Item): Promise<void> => {
     const response = await fetch(`http://localhost:8080/itens/${id}`, {
@@ -59,15 +60,15 @@ export interface Item {
     return response.json();
   };
   
-  export const getItens = async (): Promise<Item[]> => {
-    const response = await fetch('http://localhost:8080/itens', {
-      method: 'GET',
+export const getItensPorSetor = async (setorId: string): Promise<Item[]> => {
+    const response = await fetch(`http://localhost:8080/itens/setor/${setorId}`, {
+        method: 'GET',
     });
-  
+
     if (!response.ok) {
-      throw new Error('Erro ao buscar itens');
+        throw new Error('Erro ao buscar itens');
     }
-  
+
     return response.json();
-  };
+};
 
