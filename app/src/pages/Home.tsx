@@ -140,7 +140,7 @@ export default function Home() {
           </List>
         ) : (
           <Typography
-            sx={{ display: 'inline', fontWeight: 'bold', fontSize: 20, lineHeight: 3 }}
+            sx={{ display: 'inline', fontSize: 20, lineHeight: 3 }}
             color="black"
             variant="h6"
             gutterBottom

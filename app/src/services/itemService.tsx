@@ -24,8 +24,8 @@ export interface Item {
     }
   }
   
-  export const updateItem = async (id: string, item: Item): Promise<void> => {
-    const response = await fetch(`http://localhost:8080/itens/${id}`, {
+  export const updateItem = async (itemId: string, item: Item): Promise<void> => {
+    const response = await fetch(`http://localhost:8080/itens/editar/${itemId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -38,8 +38,8 @@ export interface Item {
     }
   };
   
-  export const deleteItem = async (id: string): Promise<void> => {
-    const response = await fetch(`http://localhost:8080/itens/${id}`, {
+  export const deleteItem = async (itemId: string): Promise<void> => {
+    const response = await fetch(`http://localhost:8080/itens/${itemId}`, {
       method: 'DELETE',
     });
   
@@ -48,8 +48,8 @@ export interface Item {
     }
   };
   
-  export const getItem = async (id: string): Promise<Item> => {
-    const response = await fetch(`http://localhost:8080/itens/${id}`, {
+  export const getItem = async (itemId: string): Promise<Item> => {
+    const response = await fetch(`http://localhost:8080/itens/${itemId}`, {
       method: 'GET',
     });
   

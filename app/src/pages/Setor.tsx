@@ -135,6 +135,7 @@ const ItemPage = () => {
                     Quantidade: {item.quantidade}
                   </Typography>
                 </Box>
+                
                 <IconButton
                   aria-label="edit"
                   color='inherit'
@@ -159,7 +160,7 @@ const ItemPage = () => {
           <Button
             variant="outlined"
             color="info"
-            onClick={() => navigate(`/galpoes`)}
+            onClick={() => navigate(`/galpoes/${setor?.galpao.id}`)}
             style={{ margin: 'auto', marginLeft: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
           >
             Cancelar
