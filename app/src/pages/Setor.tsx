@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, Typography, createTheme, IconButton, CircularProgress } from '@mui/material';
+import { Box, Button, Container, Typography, createTheme, IconButton, CircularProgress, TextField, InputAdornment, FormControl, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { motion } from 'framer-motion';
 import { ThemeProvider } from '@mui/system';
+
 import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
+
+import * as XLSX from "xlsx";
+
 import { getSetor, Setor } from '../services/setorService';
 import { getItensPorSetor, Item } from '../services/itemService';
 
@@ -41,7 +46,10 @@ const containerVariants = {
 const ItemPage = () => {
   const [setor, setSetor] = useState<Setor | null>(null);
   const [itens, setItens] = useState<Item[]>([]);
+  const [filteredItens, setFilteredItens] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true); // Estado para gerenciar o carregamento
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterOption, setFilterOption] = useState(''); // Opção de filtro
   const navigate = useNavigate();
   const { setorId } = useParams();
 
@@ -54,15 +62,38 @@ const ItemPage = () => {
       })
       .then((itensData) => {
         setItens(itensData);
+        setFilteredItens(itensData); // Inicialmente, filtrar pelos itens completos
         setLoading(false);
       })
       .catch(() => navigate('/404'));
-      setLoading(false);
   }, [setorId, navigate]);
 
-  const handleItemClick = (itemId: string) => {
-    navigate(`/itens/${itemId}/detalhes`);
-  };
+  useEffect(() => {
+    // Filtrar itens baseado no termo de pesquisa e na opção de filtro
+    if (searchTerm.trim() === '') {
+      // Se não houver termo de pesquisa, mostrar todos os itens
+      setFilteredItens(itens);
+    } else {
+      const filtered = itens.filter(item =>
+        item.nome.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredItens(filtered);
+    }
+  }, [searchTerm, itens]);
+
+  useEffect(() => {
+    // Ordenar itens com base na opção selecionada
+    if (filterOption === 'quantidade-crescente') {
+      const sortedItems = [...filteredItens].sort((a, b) => a.quantidade - b.quantidade);
+      setFilteredItens(sortedItems);
+    } else if (filterOption === 'quantidade-decrescente') {
+      const sortedItems = [...filteredItens].sort((a, b) => b.quantidade - a.quantidade);
+      setFilteredItens(sortedItems);
+    } else {
+      // Se não houver filtro selecionado, manter a ordenação padrão
+      setFilteredItens([...itens]);
+    }
+  }, [filterOption, itens, filteredItens]);
 
   const handleEditItemClick = (itemId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -71,6 +102,28 @@ const ItemPage = () => {
 
   const handleNavigateNovoItem = () => {
     navigate(`/setores/${setorId}/itens/novo`);
+  };
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleFilterChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setFilterOption(event.target.value as string);
+  };
+
+  const handleExportToExcel = () => {
+    const exportData = filteredItens.map(item => ({
+      // Mapear os dados para o formato de exportação
+      Nome: item.nome,
+      Posição: item.posicao,
+      Quantidade: item.quantidade,
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(exportData); // Converter dados para planilha
+    const workbook = XLSX.utils.book_new(); // Criar novo livro para a planilha
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Itens'); // Adicionar planilha ao livro
+    XLSX.writeFile(workbook, 'itens.xlsx'); // Exportar para arquivo Excel
   };
 
   return (
@@ -93,58 +146,69 @@ const ItemPage = () => {
           Itens:
         </Typography>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+            <TextField
+              label="Pesquisar"
+              variant="outlined"
+              value={searchTerm}
+              onChange={handleSearchChange}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+            />
+            <FormControl variant="outlined" sx={{ minWidth: 275, textAlign: 'left' }}>
+              <Select
+                value={filterOption}
+                onChange={handleFilterChange}
+                displayEmpty
+                inputProps={{ 'aria-label': 'filtro' }}
+              >
+                <MenuItem value="">Sem filtro</MenuItem>
+                <MenuItem value="quantidade-crescente">Quantidade (Crescente)</MenuItem>
+                <MenuItem value="quantidade-decrescente">Quantidade (Decrescente)</MenuItem>
+                {/* Adicione mais opções de filtro conforme necessário */}
+              </Select>
+            </FormControl>
+          </Box>
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
               <CircularProgress />
             </Box>
-          ) : itens.length === 0 ? (
+          ) : filteredItens.length === 0 ? (
             <Typography variant="body1">Nenhum item encontrado.</Typography>
           ) : (
-            itens.map((item) => (
-              <Button
-                key={item.id}
-                variant="contained"
-                color="secondary"
-                fullWidth
-                onClick={() => handleItemClick(item.id)}
-                sx={{ display: 'flex', justifyContent: 'space-between', padding: 2, width: '120%', marginBottom: 2}}
-              >
-                <Box sx={{ textAlign: 'left' }}>
-                  <Typography
-                    sx={{ display: 'block', fontWeight: 'bold', fontSize: 16, lineHeight: 1, marginBottom: 2, marginTop: 1.5 }}
-                    color="inherit"
-                    variant="h6"
-                    gutterBottom
-                  >
-                    {item.nome}
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5 }}
-                    color="inherit"
-                    variant="h6"
-                    gutterBottom
-                  >
-                    POS: {item.posicao}
-                  </Typography>
-                  <Typography
-                    sx={{ display: 'block', fontSize: 14, lineHeight: 1, marginBottom: 1.5, textTransform: 'none' }}
-                    color="inherit"
-                    variant="h6"
-                    gutterBottom
-                  >
-                    Quantidade: {item.quantidade}
-                  </Typography>
-                </Box>
-                
-                <IconButton
-                  aria-label="edit"
-                  color='inherit'
-                  onClick={(e) => handleEditItemClick(item.id, e)}
-                >
-                  <EditIcon />
-                </IconButton>
-              </Button>
-            ))
+            <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Nome</TableCell>
+                    <TableCell>Posição</TableCell>
+                    <TableCell>Quantidade</TableCell>
+                    <TableCell>Ações</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {filteredItens.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>{item.nome}</TableCell>
+                      <TableCell>{item.posicao}</TableCell>
+                      <TableCell>{item.quantidade}</TableCell>
+                      <TableCell>
+                        <IconButton aria-label="edit" color="inherit" onClick={(e) => handleEditItemClick(item.id, e)}>
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
           )}
         </Box>
         <br />
@@ -166,6 +230,14 @@ const ItemPage = () => {
             Cancelar
           </Button>
         </Box>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={handleExportToExcel}
+          style={{ margin: 'auto', marginTop: '4%', width: '150px', padding: '10px', fontSize: '14px' }}
+        >
+          Exportar para Excel
+        </Button>
       </Container>
     </ThemeProvider>
   );

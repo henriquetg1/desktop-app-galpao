@@ -7,6 +7,7 @@ import { Galpao, getGalpao } from '../services/galpaoService';
 import { Setor } from '../services/setorService';
 import EditIcon from '@mui/icons-material/Edit';
 
+
 // Tema personalizado
 const theme = createTheme({
   typography: {
