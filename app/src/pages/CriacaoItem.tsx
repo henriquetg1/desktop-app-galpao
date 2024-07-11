@@ -55,31 +55,33 @@ const CriacaoItem = () => {
         >
           Criação de Item
         </Typography>
-        <TextField
-          label="Nome"
-          variant="outlined"
-          fullWidth
-          value={nome}
-          onChange={(e) => setNome(e.target.value)}
-          style={{ marginBottom: 20 }}
-        />
-        <TextField
-          label="Posição"
-          variant="outlined"
-          fullWidth
-          value={posicao}
-          onChange={(e) => setPosicao(e.target.value)}
-          style={{ marginBottom: 20 }}
-        />
-        <TextField
-          label="Quantidade"
-          variant="outlined"
-          fullWidth
-          type="number"
-          value={quantidade}
-          onChange={(e) => setQuantidade(Number(e.target.value))}
-          style={{ marginBottom: 20 }}
-        />
+        <Box style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <TextField
+            label="Nome"
+            variant="outlined"
+            fullWidth
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            style={{ marginBottom: 20, width: '450px' }}
+          />
+          <TextField
+            label="Posição"
+            variant="outlined"
+            fullWidth
+            value={posicao}
+            onChange={(e) => setPosicao(e.target.value)}
+            style={{ marginBottom: 20 }}
+          />
+          <TextField
+            label="Quantidade"
+            variant="outlined"
+            fullWidth
+            type="number"
+            value={quantidade}
+            onChange={(e) => setQuantidade(Number(e.target.value))}
+            style={{ marginBottom: 20, width: '450px' }}
+          />
+        </Box>
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Button
             variant="contained"

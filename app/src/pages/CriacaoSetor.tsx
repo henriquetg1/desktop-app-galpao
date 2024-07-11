@@ -52,7 +52,7 @@ const CriacaoSetor = () => {
         fullWidth
         value={setor}
         onChange={(e) => setSetor(e.target.value)}
-        style={{ marginBottom: 20}}
+        style={{ marginBottom: 20, width: '450px'}}
         />
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Button
