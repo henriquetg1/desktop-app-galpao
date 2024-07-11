@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Alert } from '@mui/material';
 import { Setor, updateSetor, deleteSetor } from '../services/setorService';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/system';
@@ -29,6 +29,8 @@ const theme = createTheme({
 const EdicaoSetor: React.FC = () => {
     const [nome, setNome] = useState<string>('');
     const [open, setOpen] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState<string>('');
     const navigate = useNavigate();
     const { idSetor } = useParams<{ idSetor: string }>(); // Usar o id do setor na URL
     const { id } = useParams(); // Usar o id do galpão na URL
@@ -48,6 +50,11 @@ const EdicaoSetor: React.FC = () => {
     }
 
     const handleSave = async () => {
+        if (!nome) {
+            setSnackbarMessage('O campo nome deve ser preenchido.');
+            setSnackbarOpen(true);
+            return;
+        }
         await updateSetor(idSetor, { nome }); // Usar idSetor aqui
         navigate(`/galpoes/${id}`); // Redirecionar para a lista de galpões
     };
@@ -63,6 +70,10 @@ const EdicaoSetor: React.FC = () => {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
     };
 
     return (
@@ -146,6 +157,15 @@ const EdicaoSetor: React.FC = () => {
                         </Button>
                     </DialogActions>
                 </Dialog>
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={handleSnackbarClose}
+                >
+                    <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+                        {snackbarMessage}
+                    </Alert>
+                </Snackbar>
             </Container>
         </ThemeProvider>
     );

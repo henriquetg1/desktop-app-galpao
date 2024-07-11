@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Button, Container, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Alert } from '@mui/material';
 import { Galpao, updateGalpao, deleteGalpao } from '../services/galpaoService';
 import { createTheme } from '@mui/material/styles';
 import { ThemeProvider } from '@mui/system';
@@ -30,6 +30,8 @@ const EdicaoGalpao: React.FC = () => {
   const [nome, setNome] = useState<string>('');
   const [endereco, setEndereco] = useState<string>('');
   const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState<string>('');
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -49,6 +51,11 @@ const EdicaoGalpao: React.FC = () => {
   }
 
   const handleSave = async () => {
+    if (!nome || !endereco) {
+      setSnackbarMessage('Todos os campos devem ser preenchidos.');
+      setSnackbarOpen(true);
+      return;
+    }
     await updateGalpao(id, { nome, endereco });
     navigate('/galpoes');
   };
@@ -64,6 +71,10 @@ const EdicaoGalpao: React.FC = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
   };
 
   return (
@@ -155,6 +166,15 @@ const EdicaoGalpao: React.FC = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={handleSnackbarClose}
+        >
+          <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: '100%' }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );
