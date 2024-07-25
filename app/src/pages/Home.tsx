@@ -75,13 +75,14 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
+        <Avatar alt="Logo WJT" src="public/logo-w-j-t-preto.png" sx={{ width: 200, height: 200, margin: 'auto', marginTop: -20, marginBottom: 2 }} />
         <Typography
           sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
           color="black"
           variant="h2"
           gutterBottom
         >
-          Bem-vindo Sr. Waldir José Turco!
+          Bem-vindo Sr. Waldir José Tucci Turco
         </Typography>
         <Typography
           sx={{ display: 'block', fontWeight: 'bold', fontSize: 20, lineHeight: 1, marginTop: 5, marginBottom: 2.5}}
