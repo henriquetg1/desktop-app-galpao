@@ -50,6 +50,7 @@ const ItemPage = () => {
   const [loading, setLoading] = useState(true); // Estado para gerenciar o carregamento
   const [searchTerm, setSearchTerm] = useState('');
   const [filterOption, setFilterOption] = useState(''); // Opção de filtro
+  const [searchField, setSearchField] = useState('nome'); // Campo de pesquisa
   const navigate = useNavigate();
   const { setorId } = useParams();
 
@@ -75,7 +76,7 @@ const ItemPage = () => {
       // Aplicar filtro de pesquisa
       if (searchTerm.trim() !== '') {
         updatedItens = updatedItens.filter(item =>
-          item.nome.toLowerCase().includes(searchTerm.toLowerCase())
+          item[searchField].toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
@@ -84,13 +85,21 @@ const ItemPage = () => {
         updatedItens = [...updatedItens].sort((a, b) => a.quantidade - b.quantidade);
       } else if (filterOption === 'quantidade-decrescente') {
         updatedItens = [...updatedItens].sort((a, b) => b.quantidade - a.quantidade);
+      } else if (filterOption === 'nome-ascendente') {
+        updatedItens = [...updatedItens].sort((a, b) => a.nome.localeCompare(b.nome));
+      } else if (filterOption === 'nome-descendente') {
+        updatedItens = [...updatedItens].sort((a, b) => b.nome.localeCompare(a.nome));
+      } else if (filterOption === 'posicao-ascendente') {
+        updatedItens = [...updatedItens].sort((a, b) => a.posicao.localeCompare(b.posicao));
+      } else if (filterOption === 'posicao-descendente') {
+        updatedItens = [...updatedItens].sort((a, b) => b.posicao.localeCompare(a.posicao));
       }
 
       setFilteredItens(updatedItens);
     };
 
     searchAndFilter();
-  }, [searchTerm, filterOption, itens]);
+  }, [searchTerm, filterOption, searchField, itens]);
 
   const handleEditItemClick = (itemId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -109,9 +118,12 @@ const ItemPage = () => {
     setFilterOption(event.target.value as string);
   };
 
+  const handleSearchFieldChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setSearchField(event.target.value as string);
+  };
+
   const handleExportToExcel = () => {
     const exportData = filteredItens.map(item => ({
-      // Mapear os dados para o formato de exportação
       Nome: item.nome,
       Posição: item.posicao,
       Quantidade: item.quantidade,
@@ -162,6 +174,17 @@ const ItemPage = () => {
             />
             <FormControl variant="outlined" sx={{ minWidth: 275, textAlign: 'left' }}>
               <Select
+                value={searchField}
+                onChange={handleSearchFieldChange}
+                displayEmpty
+                inputProps={{ 'aria-label': 'campo de pesquisa' }}
+              >
+                <MenuItem value="nome">Nome</MenuItem>
+                <MenuItem value="posicao">Posição</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl variant="outlined" sx={{ minWidth: 275, textAlign: 'left' }}>
+              <Select
                 value={filterOption}
                 onChange={handleFilterChange}
                 displayEmpty
@@ -170,7 +193,10 @@ const ItemPage = () => {
                 <MenuItem value="">Sem filtro</MenuItem>
                 <MenuItem value="quantidade-crescente">Quantidade (Crescente)</MenuItem>
                 <MenuItem value="quantidade-decrescente">Quantidade (Decrescente)</MenuItem>
-                {/* Adicione mais opções de filtro conforme necessário */}
+                <MenuItem value="nome-ascendente">Nome (A-Z)</MenuItem>
+                <MenuItem value="nome-descendente">Nome (Z-A)</MenuItem>
+                <MenuItem value="posicao-ascendente">Posição (A-Z)</MenuItem>
+                <MenuItem value="posicao-descendente">Posição (Z-A)</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -198,7 +224,10 @@ const ItemPage = () => {
                       <TableCell>{item.posicao}</TableCell>
                       <TableCell>{item.quantidade}</TableCell>
                       <TableCell>
-                        <IconButton aria-label="edit" color="inherit" onClick={(e) => handleEditItemClick(item.id, e)}>
+                        <IconButton
+                          color="info"
+                          onClick={(e) => handleEditItemClick(item.id, e)}
+                        >
                           <EditIcon />
                         </IconButton>
                       </TableCell>
@@ -209,33 +238,33 @@ const ItemPage = () => {
             </TableContainer>
           )}
         </Box>
-        <br />
-        <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleNavigateNovoItem}
-            style={{ margin: 'auto', marginRight: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
-          >
-            Novo Item
-          </Button>
-          <Button
+          <br />
+          <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNavigateNovoItem}
+              style={{ margin: 'auto', marginRight: '1.5%', width: '150px', padding: '10px', fontSize: '14px' }}
+            >
+              Novo Item
+            </Button>
+            <Button
             variant="outlined"
             color="info"
             onClick={() => navigate(`/galpoes/${setor?.galpao.id}`)}
-            style={{ margin: 'auto', marginLeft: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
+            style={{ margin: 'auto', marginLeft: '1.5%', width: '150px', padding: '10px', fontSize: '14px' }}
+            >
+              Cancelar
+            </Button>
+          </Box>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleExportToExcel}
+            style={{ margin: 'auto', marginTop: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
           >
-            Cancelar
+            Exportar para Excel
           </Button>
-        </Box>
-        <Button
-          variant="outlined"
-          color="secondary"
-          onClick={handleExportToExcel}
-          style={{ margin: 'auto', marginTop: '4%', width: '150px', padding: '10px', fontSize: '14px' }}
-        >
-          Exportar para Excel
-        </Button>
       </Container>
     </ThemeProvider>
   );
