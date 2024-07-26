@@ -69,31 +69,28 @@ const ItemPage = () => {
   }, [setorId, navigate]);
 
   useEffect(() => {
-    // Filtrar itens baseado no termo de pesquisa e na opção de filtro
-    if (searchTerm.trim() === '') {
-      // Se não houver termo de pesquisa, mostrar todos os itens
-      setFilteredItens(itens);
-    } else {
-      const filtered = itens.filter(item =>
-        item.nome.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredItens(filtered);
-    }
-  }, [searchTerm, itens]);
+    const searchAndFilter = () => {
+      let updatedItens = itens;
 
-  useEffect(() => {
-    // Ordenar itens com base na opção selecionada
-    if (filterOption === 'quantidade-crescente') {
-      const sortedItems = [...filteredItens].sort((a, b) => a.quantidade - b.quantidade);
-      setFilteredItens(sortedItems);
-    } else if (filterOption === 'quantidade-decrescente') {
-      const sortedItems = [...filteredItens].sort((a, b) => b.quantidade - a.quantidade);
-      setFilteredItens(sortedItems);
-    } else {
-      // Se não houver filtro selecionado, manter a ordenação padrão
-      setFilteredItens([...itens]);
-    }
-  }, [filterOption, itens, filteredItens]);
+      // Aplicar filtro de pesquisa
+      if (searchTerm.trim() !== '') {
+        updatedItens = updatedItens.filter(item =>
+          item.nome.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      // Aplicar ordenação com base na opção de filtro
+      if (filterOption === 'quantidade-crescente') {
+        updatedItens = [...updatedItens].sort((a, b) => a.quantidade - b.quantidade);
+      } else if (filterOption === 'quantidade-decrescente') {
+        updatedItens = [...updatedItens].sort((a, b) => b.quantidade - a.quantidade);
+      }
+
+      setFilteredItens(updatedItens);
+    };
+
+    searchAndFilter();
+  }, [searchTerm, filterOption, itens]);
 
   const handleEditItemClick = (itemId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -123,7 +120,8 @@ const ItemPage = () => {
     const worksheet = XLSX.utils.json_to_sheet(exportData); // Converter dados para planilha
     const workbook = XLSX.utils.book_new(); // Criar novo livro para a planilha
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Itens'); // Adicionar planilha ao livro
-    XLSX.writeFile(workbook, 'itens.xlsx'); // Exportar para arquivo Excel
+    const fileName = setor ? `itens_${setor.nome}.xlsx` : 'itens.xlsx';
+    XLSX.writeFile(workbook, fileName); // Exportar para arquivo Excel
   };
 
   return (
