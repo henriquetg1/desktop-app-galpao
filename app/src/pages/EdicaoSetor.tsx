@@ -138,7 +138,7 @@ const EdicaoSetor: React.FC = () => {
                     <DialogTitle id="alert-dialog-title">{"Confirmação de Exclusão"}</DialogTitle>
                     <DialogContent>
                         <DialogContentText id="alert-dialog-description">
-                            Tem certeza que deseja excluir este setor?
+                            Tem certeza que deseja excluir este setor? A exclusão é irreversível e todos os itens associados a ele serão perdidos.
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>

@@ -147,7 +147,7 @@ const EdicaoGalpao: React.FC = () => {
           <DialogTitle id="alert-dialog-title">{"Confirmação de Exclusão"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Tem certeza que deseja excluir este galpão?
+              Tem certeza que deseja excluir este galpão? A exclusão é irreversível e todos os setores e itens associados a ele também serão excluídos.
             </DialogContentText>
           </DialogContent>
           <DialogActions>

@@ -64,7 +64,7 @@ const EdicaoItem: React.FC = () => {
     }
     try {
       await updateItem(itemId, { nome, posicao, quantidade });
-      navigate(`/galpoes`);
+      navigate(`/setores/${setorId}`);
     } catch (error) {
       console.error('Failed to update item', error);
       setError('Falha ao atualizar o item.');
@@ -74,7 +74,7 @@ const EdicaoItem: React.FC = () => {
   const handleDelete = async () => {
     try {
       await deleteItem(itemId);
-      navigate(`/galpoes`);
+      navigate(`/setores/${setorId}`);
     } catch (error) {
       console.error('Failed to delete item', error);
       setError('Falha ao excluir o item.');
@@ -157,7 +157,7 @@ const EdicaoItem: React.FC = () => {
           <Button
             variant="outlined"
             color="info"
-            onClick={() => navigate(`/galpoes`)}
+            onClick={() => navigate(`/setores/${setorId}`)}
             style={{ margin: 'auto', marginLeft: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
           >
             Cancelar
@@ -188,7 +188,7 @@ const EdicaoItem: React.FC = () => {
           <DialogTitle id="alert-dialog-title">{"Excluir item"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Tem certeza que deseja excluir este item?
+              Tem certeza que deseja excluir este item? A exclusão é irreversível.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
