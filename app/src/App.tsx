@@ -8,6 +8,7 @@ import EdicaoSetor from './pages/EdicaoSetor';
 import EdicaoItem from './pages/EdicaoItem';
 import Galpao from './pages/Galpao'
 import Setor from './pages/Setor'
+import TodosItens from './pages/TodosItens';
 import './App.css';
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
       <Route path="/setores/:setorId" element={<Setor />} />
       <Route path="/setores/:setorId/itens/novo" element={<CriacaoItem />} />
       <Route path='/itens/:itemId/editar' element={<EdicaoItem />} />
-
+      <Route path="/galpoes/:galpaoId/itens" element={<TodosItens />} />
 
     </Routes>
   );

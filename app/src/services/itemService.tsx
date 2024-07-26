@@ -72,5 +72,18 @@ export interface Item {
     const data = await response.json();
     console.log('getItensPorSetor data:', data); // Log dos dados recebidos
     return data;
-};
+  };
 
+  export const getItensPorGalpao = async (galpaoId: string): Promise<Item[]> => {
+    const response = await fetch(`http://localhost:8080/itens/galpao/${galpaoId}`, {
+        method: 'GET',
+    });
+
+    if (!response.ok) {
+        throw new Error('Erro ao buscar itens');
+    }
+
+    const data = await response.json();
+    console.log('getItensPorGalpao data:', data); // Log dos dados recebidos
+    return data;
+  }
