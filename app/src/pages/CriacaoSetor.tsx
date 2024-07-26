@@ -1,4 +1,4 @@
-import { Box, Button, Container, TextField, Typography, createTheme } from '@mui/material';
+import { Box, Button, Container, TextField, Typography, createTheme, Snackbar, Alert } from '@mui/material';
 import { ThemeProvider } from '@mui/system';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,32 +27,46 @@ const theme = createTheme({
 
 const CriacaoSetor = () => {
   const [setor, setSetor] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
   const { id } = useParams();
 
   const handleCreate = async () => {
-    await createSetor(id, { nome: setor });
-    navigate(`/galpoes/${id}`);
+    if (!setor) {
+      setError('O campo nome do setor deve ser preenchido.');
+      return;
+    }
+    try {
+      await createSetor(id, { nome: setor });
+      navigate(`/galpoes/${id}`);
+    } catch (error) {
+      console.error('Erro ao criar o setor:', error);
+      setError('Erro ao criar o setor. Tente novamente mais tarde.');
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setError('');
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container>
         <Typography
-        sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
-        color="black"
-        variant="h2"
-        gutterBottom
+          sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
+          color="black"
+          variant="h2"
+          gutterBottom
         >
-        Criação de Setor
+          Criação de Setor
         </Typography>
         <TextField
-        label="Nome"
-        variant="outlined"
-        fullWidth
-        value={setor}
-        onChange={(e) => setSetor(e.target.value)}
-        style={{ marginBottom: 20, width: '450px'}}
+          label="Nome"
+          variant="outlined"
+          fullWidth
+          value={setor}
+          onChange={(e) => setSetor(e.target.value)}
+          style={{ marginBottom: 20, width: '450px' }}
         />
         <Box style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
           <Button
@@ -72,6 +86,11 @@ const CriacaoSetor = () => {
             Cancelar
           </Button>
         </Box>
+        <Snackbar open={!!error} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+          <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+            {error}
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

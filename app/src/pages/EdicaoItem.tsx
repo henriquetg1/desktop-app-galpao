@@ -64,8 +64,7 @@ const EdicaoItem: React.FC = () => {
     }
     try {
       await updateItem(itemId, { nome, posicao, quantidade });
-      setSuccess('Item atualizado com sucesso!');
-      navigate(`/setores/${setorId}`);
+      navigate(`/galpoes`);
     } catch (error) {
       console.error('Failed to update item', error);
       setError('Falha ao atualizar o item.');
@@ -75,8 +74,7 @@ const EdicaoItem: React.FC = () => {
   const handleDelete = async () => {
     try {
       await deleteItem(itemId);
-      setSuccess('Item excluído com sucesso!');
-      navigate(`/setores/${setorId}`);
+      navigate(`/galpoes`);
     } catch (error) {
       console.error('Failed to delete item', error);
       setError('Falha ao excluir o item.');
@@ -159,7 +157,7 @@ const EdicaoItem: React.FC = () => {
           <Button
             variant="outlined"
             color="info"
-            onClick={() => navigate(`/setores/${setorId}`)}
+            onClick={() => navigate(`/galpoes`)}
             style={{ margin: 'auto', marginLeft: '3%', width: '150px', padding: '10px', fontSize: '14px' }}
           >
             Cancelar
