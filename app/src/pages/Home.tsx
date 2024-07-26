@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Autocomplete, Box, Button, List, TextField, ListItem, ListItemText, Typography, Divider, IconButton, ListItemAvatar, Avatar, Container, createTheme, ThemeProvider, CircularProgress } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Box, Button, List, Typography, IconButton, Avatar, Container, createTheme, ThemeProvider, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import EditIcon from '@mui/icons-material/Edit';
@@ -75,7 +75,7 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
-        <Avatar alt="Logo WJT" src="public/logo-w-j-t-preto.png" sx={{ width: 200, height: 200, margin: 'auto', marginTop: -20, marginBottom: 2 }} />
+        <Avatar alt="Logo WJT" src="public/logo-w-j-t-preto.png" sx={{ width: 200, height: 200, margin: 'auto' }} />
         <Typography
           sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
           color="black"
