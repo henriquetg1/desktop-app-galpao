@@ -1,8 +1,9 @@
 {
-  "name": "app",
+  "name": "app-inventario-galpao",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
+  "main": "dist-electron/main.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -35,5 +36,25 @@
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
   },
-  "main": "dist-electron/main.js"
+  "build": {
+    "appId": "com.henrique.appinventariogalpao",
+    "productName": "App Inventário Galpão",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist-build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icons/win/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icons/mac/icon.icns"
+    }
+  }
 }
