@@ -32,16 +32,18 @@ const CriacaoItem = () => {
   const [quantidade, setQuantidade] = useState<number>(0);
   const [error, setError] = useState<string>('');
   const navigate = useNavigate();
-  const { galpaoId, setorId } = useParams<{ galpaoId: string; setorId: string }>();
+  const { galpaoId, setorId } = useParams<{ galpaoId?: string; setorId?: string }>();
 
   const handleCreate = async () => {
-    if (!nome || !posicao || quantidade < 0) {
+    if (!nome || !posicao || quantidade < 0 || !setorId) {
       setError('Todos os campos devem ser preenchidos corretamente. Quantidade não pode ser negativa.');
       return;
     }
+
     try {
       console.log('Creating item with:', galpaoId, setorId, { nome, posicao, quantidade });
-      await createItem(setorId, { nome: nome, posicao: posicao, quantidade: quantidade });
+      // @ts-ignore
+      await createItem(setorId, { nome, posicao, quantidade });
       navigate(`/setores/${setorId}`);
     } catch (error) {
       console.error('Error creating item:', error);
@@ -52,7 +54,7 @@ const CriacaoItem = () => {
   const handleCloseSnackbar = () => {
     setError('');
   };
-
+  
   return (
     <ThemeProvider theme={theme}>
       <Container>

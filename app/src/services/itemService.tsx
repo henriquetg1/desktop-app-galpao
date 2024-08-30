@@ -10,7 +10,7 @@ export interface Item {
   galpao: Galpao;
 }
   
-  export const createItem = async (setorId: string, item: Item): Promise<void> => {
+  export const createItem = async (setorId: string, item: Omit<Item, 'id'>): Promise<void> => {
     const response = await fetch(`http://localhost:8080/itens/setor/${setorId}`, {
       method: 'POST',
       headers: {
