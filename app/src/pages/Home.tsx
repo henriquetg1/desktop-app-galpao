@@ -37,7 +37,7 @@ const containerVariants = {
 
 // Função que retorna a página Home
 export default function Home() {
-  const [data, setData] = useState([]); // Estado para armazenar dados dos galpões (nome e endereço)
+  const [data, setData] = useState<any[]>([]); // Estado para armazenar dados dos galpões (nome e endereço)
   const [loading, setLoading] = useState(true); // Estado para gerenciar o carregamento
   const navigate = useNavigate(); // Hook para navegação
 
@@ -63,19 +63,19 @@ export default function Home() {
   }
 
   // Manipulador para clicar em um galpão e navegar para a página de detalhes
-  const handleGalpaoClick = (id) => {
+  const handleGalpaoClick = (id: any) => {
     navigate(`/galpoes/${id}`);
   };
 
   // Manipulador para clicar no ícone de edição e navegar para a página de edição
-  const handleEditClick = (id) => {
+  const handleEditClick = (id: any) => {
     navigate(`/galpoes/editar/${id}`);
   };
 
   return (
     <ThemeProvider theme={theme}>
       <Container component={motion.div} initial="hidden" animate="visible" variants={containerVariants} sx={{ textAlign: 'center' }}>
-        <Avatar alt="Logo WJT" src="public/logo-w-j-t-preto.png" sx={{ width: 200, height: 200, margin: 'auto' }} />
+        <Avatar alt="Logo WJT" src="logo-w-j-t-preto.png" sx={{ width: 200, height: 200, margin: 'auto' }} />
         <Typography
           sx={{ display: 'block', fontWeight: 'bold', fontSize: 25, lineHeight: 2 }}
           color="black"
@@ -162,3 +162,5 @@ export default function Home() {
     </ThemeProvider>
   );
 }
+
+// Stock 
