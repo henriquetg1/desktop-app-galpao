@@ -8,18 +8,21 @@ export interface Galpao {
 import { buscarSetoresPorGalpao } from './setorService';
 import { Setor } from './setorService';
 
-export const createGalpao = async (galpao: Galpao): Promise<void> => {
+export const createGalpao = async (galpao: Omit<Galpao, 'id'>): Promise<Galpao> => {
   const response = await fetch('http://localhost:8080/galpoes', {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(galpao),
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(galpao),
   });
 
   if (!response.ok) {
-      throw new Error('Erro ao criar galpão');
+    throw new Error('Erro ao criar galpão');
   }
+
+  const createdGalpao = await response.json();
+  return createdGalpao;  // Retorna o galpão criado com o id gerado
 };
 
 export const updateGalpao = async (id: string, galpao: Galpao): Promise<void> => {

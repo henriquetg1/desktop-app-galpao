@@ -56,11 +56,13 @@ const EdicaoGalpao: React.FC = () => {
       setSnackbarOpen(true);
       return;
     }
+    // @ts-ignore
     await updateGalpao(id, { nome, endereco });
     navigate('/galpoes');
   };
 
   const handleDelete = async () => {
+    // @ts-ignore
     await deleteGalpao(id);
     navigate('/galpoes');
   }
