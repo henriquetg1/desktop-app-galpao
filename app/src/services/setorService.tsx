@@ -8,19 +8,19 @@ export interface Setor {
     itens: Item[]; // Adiciona a propriedade itens
 }
 
-export const createSetor = async (galpaoId: string, setor: Setor): Promise<void> => {
+export const createSetor = async (galpaoId: string, setor: Omit<Setor, 'id'>): Promise<void> => {
     const response = await fetch(`http://localhost:8080/setores/galpao/${galpaoId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(setor),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(setor),
     });
-
+  
     if (!response.ok) {
-        throw new Error('Erro ao cadastrar setor');
+      throw new Error('Erro ao criar setor');
     }
-};
+  };
 
 export const updateSetor = async (id: string, setor: Setor): Promise<void> => {
     const response = await fetch(`http://localhost:8080/setores/${id}`, {

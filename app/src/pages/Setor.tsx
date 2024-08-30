@@ -76,6 +76,7 @@ const ItemPage = () => {
       // Aplicar filtro de pesquisa
       if (searchTerm.trim() !== '') {
         updatedItens = updatedItens.filter(item =>
+          // @ts-ignore
           item[searchField].toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
@@ -175,6 +176,7 @@ const ItemPage = () => {
             <FormControl variant="outlined" sx={{ minWidth: 275, textAlign: 'left' }}>
               <Select
                 value={searchField}
+                // @ts-ignore
                 onChange={handleSearchFieldChange}
                 displayEmpty
                 inputProps={{ 'aria-label': 'campo de pesquisa' }}
@@ -186,6 +188,7 @@ const ItemPage = () => {
             <FormControl variant="outlined" sx={{ minWidth: 275, textAlign: 'left' }}>
               <Select
                 value={filterOption}
+                // @ts-ignore
                 onChange={handleFilterChange}
                 displayEmpty
                 inputProps={{ 'aria-label': 'filtro' }}

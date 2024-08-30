@@ -55,11 +55,13 @@ const EdicaoSetor: React.FC = () => {
             setSnackbarOpen(true);
             return;
         }
+        // @ts-ignore
         await updateSetor(idSetor, { nome }); // Usar idSetor aqui
         navigate(`/galpoes/${id}`); // Redirecionar para a lista de galpões
     };
 
     const handleDelete = async () => {
+        // @ts-ignore
         await deleteSetor(idSetor); // Usar idSetor aqui
         navigate(`/galpoes/${id}`); // Redirecionar para a lista de galpões
     }

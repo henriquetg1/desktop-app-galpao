@@ -32,12 +32,23 @@ const CriacaoSetor = () => {
   const { id } = useParams();
 
   const handleCreate = async () => {
+    if (!id) {
+      setError('ID do galpão não encontrado.');
+      return;
+    }
     if (!setor) {
       setError('O campo nome do setor deve ser preenchido.');
       return;
     }
     try {
-      await createSetor(id, { nome: setor });
+      // Criar um setor sem definir o id, que será gerado pelo backend
+      const novoSetor = {
+        nome: setor,
+        galpao: { id: id, nome: '', endereco: '' },
+        itens: []
+      };
+
+      await createSetor(id, novoSetor);
       navigate(`/galpoes/${id}`);
     } catch (error) {
       console.error('Erro ao criar o setor:', error);
